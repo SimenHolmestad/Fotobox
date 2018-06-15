@@ -2,6 +2,6 @@
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
 {% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> remote </h1>
+<h1><a href="{% url 'remote:index' %}"> remote </a></h1>
 <img id="captured_image" src="{{ image_link }}", alt="bilde">
 <a href="{% url 'remote:capture' %}"><div class="button">capture new image</div></a>
