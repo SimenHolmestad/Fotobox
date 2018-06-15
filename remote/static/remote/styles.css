@@ -18,3 +18,7 @@ a {
     max-height:100%;
     max-width:100%;
 }
+
+#occupied-message {
+    font-size:100px;
+}

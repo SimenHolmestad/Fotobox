@@ -3,5 +3,5 @@
 <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
 {% endblock stylesheets %}
 <h1><a href="{% url 'remote:index' %}"> remote </h1>
-<img id="captured_image" src="{{ image_link }}", alt="bilde">
+<h2><id="occupied-message">The camera is occupied. Try again</h2>
 <a href="{% url 'remote:capture' %}"><div class="button">capture new image</div></a>
