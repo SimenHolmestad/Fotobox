@@ -3,9 +3,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
 {% endblock stylesheets %}
 
-<h1><a href="{% url 'remote:index' %}"> remote </a></h1>
-<h1 style="font-size:140px">Choose album:</h1>
-<a href="{% url 'remote:new_album' %}"><div class="button">Create new album</div></a>
+<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
+<p>Hei og velkommen til Fotobox. Du kan bruke denne siden til å ta bilder med fotoboksen eller se på bilder som allerede er tatt. Velg eller lag et album for å begynne!</p>
+<a href="{% url 'remote:new_album' %}"><div class="button">Lag nytt album</div></a>
 {% for album in albums %}
   <a href="{% url 'remote:album' album.slug %}"><div class="button" style="background-color:yellow">{{ album.name }}</div></a>
 {% endfor %}

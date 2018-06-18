@@ -2,9 +2,10 @@
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
 {% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> remote </a></h1>
-<h1 style="font-size:140px">Create new album:</h1>
+<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
+<h1 style="font-size:140px">Lag nytt album:</h1>
+<p>Du kan kalle albumet ditt for hva som helst, eller navnet ditt hvis du ikke kommer på noe.</p>
 <form method="post">{% csrf_token %}
   {{ form.as_p }}
-  <input type="submit" value="make" />
+  <input type="submit" value="lag album" />
 </form>

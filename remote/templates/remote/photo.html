@@ -3,5 +3,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
 {% endblock stylesheets %}
 <h1><a href="{% url 'remote:index' %}"> remote </a></h1>
-<h1><a href="{% url 'remote:album' album %}">Back to album</a></h1>
+<h1><a href="{% url 'remote:album' album %}">Tilbake til album</a></h1>
 <img class="general_image" src="{{ photo.image.url }}", alt="bilde">
+<p>Hvis du er på telefon, kan du holde fingeren på bildet og lagre det med menyen som kommer opp. (På iphone i hvert fall. Jeg regner med at dere som bruker android klarer dere selv ;))</p>

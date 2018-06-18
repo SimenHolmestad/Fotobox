@@ -2,13 +2,14 @@
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
 {% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> remote </a></h1>
-<h1>Album: {{ album.name }}</h1>
-<a href="{% url 'remote:capture' album.slug %}"><div class="button">capture image to album</div></a>
+<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
+<h1>Bilder i albumet "{{ album.name }}":</h1>
+<a href="{% url 'remote:capture' album.slug %}"><div class="button">Ta nytt bilde til albumet</div></a>
 {% if photos %}
+<p>Tips: Hvis du trykker på et bilde får du det opp i superoppløsning. Kan være lurt hvis du har planer om å lagre det</p>
 {% for photo in photos %}
 <a href="{% url 'remote:photo' album.slug forloop.counter %}"><img class="general_image" src="{{ photo.image_lowres.url }}", alt="bilde"></a>
 {% endfor %}
 {% else %}
-<h2>This album has no images yet </h2>
+<h2>Dette albumet har ikke noen bilder i seg ennå</h2>
 {% endif %}

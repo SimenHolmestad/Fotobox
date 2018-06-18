@@ -2,6 +2,6 @@
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
 {% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> remote </a></h1>
-<h2><id="occupied-message">The camera is occupied. Try again when no one uses it</h2>
-<a href="{% url 'remote:capture' album.slug %}"><div class="button">capture new image</div></a>
+<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
+<h2><id="occupied-message">Kameraet er opptatt. Prøv på nytt når ingen bruker det</h2>
+<a href="{% url 'remote:capture' album.slug %}"><div class="button">Ta nytt bilde</div></a>

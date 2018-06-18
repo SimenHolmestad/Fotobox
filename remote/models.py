@@ -61,7 +61,7 @@ class Photo (models.Model):
         temp_thumb.seek(0)
         
         # set save=False, otherwise it will run in an infinite loop
-        print ("thumf_filename: " + thumb_filename)
+        print ("lowres_filename: " + thumb_filename)
         self.image_lowres.save(thumb_filename, ContentFile(temp_thumb.read()), save=False)
         temp_thumb.close()
         return True
