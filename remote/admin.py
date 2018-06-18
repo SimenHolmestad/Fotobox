@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import CameraStatus, Photo, Album
 
-# Register your models here.
+admin.site.register(CameraStatus)
+admin.site.register(Photo)
+admin.site.register(Album)
