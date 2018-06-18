@@ -1,0 +1,14 @@
+{% load static %}
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
+{% endblock stylesheets %}
+<h1><a href="{% url 'remote:index' %}"> remote </a></h1>
+<h1>Album: {{ album }}</h1>
+<a href="{% url 'remote:capture' album %}"><div class="button">capture image to album</div></a>
+{% if photos %}
+{% for photo in photos %}
+<a href="{% url 'remote:photo' album forloop.counter %}"><img class="general_image" src="{{ photo.image_lowres.url }}", alt="bilde"></a>
+{% endfor %}
+{% else %}
+<h2>This album has no images yet </h2>
+{% endif %}
