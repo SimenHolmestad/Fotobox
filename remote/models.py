@@ -5,6 +5,8 @@ from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.utils.text import slugify
+from django.utils import timezone
+import pytz
 from PIL import Image
 import os
 from io import BytesIO
@@ -31,7 +33,7 @@ def create_folder(folder_location):
         print(folder_location + " already in place")
     
 class Photo (models.Model):
-    shot_time = models.DateTimeField(default=datetime.now)
+    shot_time = models.DateTimeField(default=timezone.now)
     image = models.ImageField()
     image_lowres = models.ImageField()
     album = models.ForeignKey("Album", on_delete=models.CASCADE)
@@ -65,7 +67,7 @@ class Photo (models.Model):
         return True
 
 class Album (models.Model):
-    time_made = models.DateTimeField(default=datetime.now)
+    time_made = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=30)
     slug = models.SlugField(max_length=30, allow_unicode=False)
 
