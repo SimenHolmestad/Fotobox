@@ -73,5 +73,8 @@ class Album (models.Model):
         self.slug = slugify(self.name)
         super(Album, self).save(*args, **kwargs)
 
+    def to_string(self):
+        return "Album: " + self.name
+
     def get_absolute_url(self):
-        return reverse("remote:album", args=[self.name])
+        return reverse("remote:album", args=[self.slug])

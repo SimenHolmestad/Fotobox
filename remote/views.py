@@ -51,19 +51,19 @@ class Capture(TemplateView):
         return context
     
     def get(self, request, *args, **kwargs):
-        album = get_object_or_404(Album, name=self.kwargs["album"])
+        album = get_object_or_404(Album, slug=self.kwargs["album"])
         
         status = get_or_create_camera_status()
         if (status.occupied):
             return redirect("remote:occupied")
         status.occupied=True;
         status.save()
-        subprocess.call(["python3", "remote/image_capture.py", album.name])
+        subprocess.call(["python3", "remote/image_capture.py", album.slug])
         status.occupied=False;
         status.save()
         photo = Photo()
         photo.album = album
-        photo.image.name=get_last_image_link(album.name)
+        photo.image.name=get_last_image_link(album.slug)
         photo.save()
         return super(Capture, self).get(request, *args, **kwargs)
 
@@ -74,11 +74,11 @@ class AlbumView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AlbumView, self).get_context_data( **kwargs)
-        context["album"] = self.kwargs["album"]
+        context["album"] = Album.objects.get(slug=self.kwargs["album"])
         return context
     
     def get_queryset(self):
-        album = get_object_or_404(Album, name=self.kwargs["album"])
+        album = get_object_or_404(Album, slug=self.kwargs["album"])
         return Photo.objects.filter(album=album).order_by('-shot_time')
 
 class PhotoView(TemplateView):
@@ -86,7 +86,7 @@ class PhotoView(TemplateView):
     context_object_name = "photo"
     
     def get_context_data(self, **kwargs):
-        album = get_object_or_404(Album, name=self.kwargs["album"])
+        album = get_object_or_404(Album, slug=self.kwargs["album"])
         try:
             photo = Photo.objects.filter(album=album).order_by('-shot_time')[self.kwargs["number"]-1]
         except:
@@ -98,3 +98,11 @@ class PhotoView(TemplateView):
     
 class Occupied(TemplateView):
     template_name = "remote/occupied.html"
+
+    def get_context_data(self, **kwargs):
+        album = get_object_or_404(Album, slug=self.kwargs["album"])
+        context["album"] = album
+        context = super(PhotoView, self).get_context_data( **kwargs)
+        return context
+        
+
