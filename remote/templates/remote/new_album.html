@@ -1,0 +1,10 @@
+{% load static %}
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
+{% endblock stylesheets %}
+<h1><a href="{% url 'remote:index' %}"> remote </a></h1>
+<h1 style="font-size:140px">Create new album:</h1>
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="make" />
+</form>

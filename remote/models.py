@@ -3,6 +3,8 @@ from datetime import datetime
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
+from django.urls import reverse
+from django.utils.text import slugify
 from PIL import Image
 import os
 from io import BytesIO
@@ -64,4 +66,12 @@ class Photo (models.Model):
 
 class Album (models.Model):
     time_made = models.DateTimeField(default=datetime.now)
-    name = models.CharField(max_length = 30)
+    name = models.CharField(max_length=30)
+    slug = models.SlugField(max_length=30, allow_unicode=False)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Album, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("remote:album", args=[self.name])

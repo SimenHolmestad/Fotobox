@@ -4,4 +4,8 @@
 {% endblock stylesheets %}
 
 <h1><a href="{% url 'remote:index' %}"> remote </a></h1>
-<a href="{% url 'remote:capture' 'test' %}"><div class="button">capture image</div></a>
+<h1 style="font-size:140px">Choose album:</h1>
+<a href="{% url 'remote:new_album' %}"><div class="button">Create new album</div></a>
+{% for album in albums %}
+  <a href="{% url 'remote:album' album.name %}"><div class="button" style="background-color:yellow">{{ album.name }}</div></a>
+{% endfor %}

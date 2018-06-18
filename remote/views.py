@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, get_object_or_404
 from django.http import Http404
+from django.urls import reverse_lazy
 
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from .models import CameraStatus, Album, Photo
 import os, subprocess
 from PIL import Image
@@ -10,11 +11,17 @@ from PIL import Image
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHOW_FULL_SIZE_IMAGE_ON_CAPTURE = True
 
-class Index(TemplateView):
-    template_name = "remote/index.html"    
+class Index(ListView):
+    template_name = "remote/index.html"
+    context_object_name = "albums"
 
-def make_resized_image(file_path):
-    return
+    def get_queryset(self):
+        return Album.objects.all()
+
+class NewAlbum(CreateView):
+    template_name = "remote/new_album.html"
+    model = Album
+    fields = ["name"]
     
 def get_last_image_link(folder_name):
     save_location = "/home/pi/prosjekter/cameraRemote/media/" + folder_name
@@ -23,7 +30,6 @@ def get_last_image_link(folder_name):
     image_count = int(f.readlines()[0])
     f.close()
     os.chdir(BASE_DIR)
-    make_resized_image(folder_name + "/bilde_" + str(image_count) + ".JPG");
     return folder_name + "/bilde_" + str(image_count) + ".JPG"
 
 def get_or_create_camera_status():
@@ -33,7 +39,7 @@ def get_or_create_camera_status():
 
 class Capture(TemplateView):
     template_name = "remote/capture.html"
-
+    
     def get_context_data(self, **kwargs):
         context = super(Capture, self).get_context_data( **kwargs)
         photo = Photo.objects.all().last()
