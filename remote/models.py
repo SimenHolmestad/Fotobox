@@ -70,6 +70,7 @@ class Album (models.Model):
     time_made = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=30)
     slug = models.SlugField(max_length=30, allow_unicode=False)
+    hidden = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

@@ -11,6 +11,12 @@ from PIL import Image
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHOW_FULL_SIZE_IMAGE_ON_CAPTURE = True
 
+def get_album_or_404(album_name):
+    album = get_object_or_404(Album, slug=album_name)
+    if album.hidden == True:
+        raise Http404
+    return album
+
 class Index(ListView):
     template_name = "remote/index.html"
     context_object_name = "albums"
@@ -51,7 +57,7 @@ class Capture(TemplateView):
         return context
     
     def get(self, request, *args, **kwargs):
-        album = get_object_or_404(Album, slug=self.kwargs["album"])
+        album = get_album_or_404(self.kwargs["album"])
         
         status = get_or_create_camera_status()
         if (status.occupied):
@@ -78,7 +84,7 @@ class AlbumView(ListView):
         return context
     
     def get_queryset(self):
-        album = get_object_or_404(Album, slug=self.kwargs["album"])
+        album = get_album_or_404(self.kwargs["album"])
         return Photo.objects.filter(album=album).order_by('-shot_time')
 
 class PhotoView(TemplateView):
@@ -86,7 +92,7 @@ class PhotoView(TemplateView):
     context_object_name = "photo"
     
     def get_context_data(self, **kwargs):
-        album = get_object_or_404(Album, slug=self.kwargs["album"])
+        album = get_album_or_404(self.kwargs["album"])
         try:
             photo = Photo.objects.filter(album=album).order_by('-shot_time')[self.kwargs["number"]-1]
         except:
@@ -100,7 +106,7 @@ class Occupied(TemplateView):
     template_name = "remote/occupied.html"
 
     def get_context_data(self, **kwargs):
-        album = get_object_or_404(Album, slug=self.kwargs["album"])
+        album = get_album_or_404(self.kwargs["album"])
         context["album"] = album
         context = super(PhotoView, self).get_context_data( **kwargs)
         return context
