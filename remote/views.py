@@ -22,7 +22,7 @@ class Index(ListView):
     context_object_name = "albums"
 
     def get_queryset(self):
-        return Album.objects.all()
+        return Album.objects.filter(hidden=False)
 
 
 class NewAlbum(CreateView):
