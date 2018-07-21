@@ -19,7 +19,7 @@ class CameraStatus (models.Model):
         if CameraStatus.objects.exists() and not self.pk:
             # if you'll not check for self.pk
             # then error will also raised in update of exists model
-            raise ValidationError("There can only be one cameraStatus instance")
+            raise ValidationError("There can only be one CameraStatus instance")
         return super(CameraStatus, self).save(*args, **kwargs)
 
 
@@ -68,7 +68,7 @@ class Photo (models.Model):
 class Album (models.Model):
     time_made = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=30)
-    slug = models.SlugField(max_length=30, allow_unicode=False)
+    slug = models.SlugField(max_length=30, allow_unicode=False, unique=True)
     hidden = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
