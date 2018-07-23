@@ -27,7 +27,7 @@ def create_photo(album):
     image_file = BytesIO()
     img.save(image_file, format="JPEG")
     image_file.seek(0)
-    filename = "bilde_" + str((len(Photo.objects.filter(album=album)) + 1)) + ".jpg"  # makes unique filenames
+    filename = "bilde_" + str((len(Photo.objects.filter(album=album)) + 1)) + ".JPG"  # makes unique filenames
     file_path = os.path.join(album.slug, filename)
 
     photo = Photo()
@@ -42,8 +42,26 @@ RUN_CAPTURE_TESTS = False
 
 class CaptureTestCase (TestCase):
     def setUp(self):
+        self.test_dir = tempfile.mkdtemp(dir=MEDIA_ROOT)
+        self.client = Client()
+
+    def tearDown(self):
+        shutil.rmtree(self.test_dir)
+
+    def testCapture(self):
         if not RUN_CAPTURE_TESTS:
+            print("RUN_CAPTURE_TESTS is set to False")
+            print("Did not run testCapture")
             return
+        self.assertEqual(len(Photo.objects.all()), 0)
+        album = create_album(self.test_dir)
+        response = self.client.get(reverse("remote:capture", args=[album.name]))
+        self.assertEqual(len(Photo.objects.all()), 1)
+        self.assertEqual(Photo.objects.all()[0].album, album)
+        self.assertContains(response, Photo.objects.all()[0].image.url)
+        test_dir_contents = os.listdir(self.test_dir)
+        self.assertTrue("bilde_1.JPG" in test_dir_contents)
+        self.assertTrue(".image_number.txt" in test_dir_contents)
 
 
 class AlbumTestCase (TestCase):
@@ -82,3 +100,21 @@ class AlbumTestCase (TestCase):
             self.fail()
         except IntegrityError:
             pass
+
+
+class PhotoTestCase (TestCase):
+    def setUp(self):
+        self.test_dir = tempfile.mkdtemp(dir=MEDIA_ROOT)
+        self.album = create_album(self.test_dir)
+
+    def tearDown(self):
+        shutil.rmtree(self.test_dir)
+
+    def test_low_res_image_generated(self):
+        create_photo(self.album)
+        test_dir_contents = os.listdir(self.test_dir)
+        print(test_dir_contents)
+        self.assertTrue("lowres" in test_dir_contents)
+        self.assertTrue("bilde_1.JPG" in test_dir_contents)
+        lowres_dir_contents = os.listdir(os.path.join(self.test_dir, "lowres"))
+        self.assertTrue("bilde_1_lowres.JPG" in lowres_dir_contents)
