@@ -54,7 +54,9 @@ if len(sys.argv) > 1:
 else:
     shot_date = datetime.now().strftime("%Y-%m-%d")
     folder_name = shot_date
-save_location = "/home/pi/prosjekter/cameraRemote/media/" + folder_name
+
+base_dir = os.path.dirname(os.path.dirname(__file__))
+save_location = os.path.join(base_dir, "media", folder_name)
 
 
 def create_save_folder():

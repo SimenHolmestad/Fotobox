@@ -32,7 +32,7 @@ class NewAlbum(CreateView):
 
 
 def get_last_image_link(folder_name):
-    save_location = "/home/pi/prosjekter/cameraRemote/media/" + folder_name
+    save_location = os.path.join(BASE_DIR, "media", folder_name)
     os.chdir(save_location)
     f = open(".image_number.txt", "r")
     image_count = int(f.readlines()[0])
