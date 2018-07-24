@@ -101,10 +101,7 @@ class PhotoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         album = get_album_or_404(self.kwargs["album"])
-        try:
-            photo = Photo.objects.filter(album=album).order_by('-shot_time')[self.kwargs["number"]-1]
-        except IndexError:
-            raise Http404
+        photo = get_object_or_404(Photo, album=album, number_in_album=self.kwargs["number"])
         context = super(PhotoView, self).get_context_data(**kwargs)
         context["photo"] = photo
         context["album"] = self.kwargs["album"]

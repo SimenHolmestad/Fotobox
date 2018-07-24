@@ -105,10 +105,14 @@ class AlbumTestCase (TestCase):
 class PhotoTestCase (TestCase):
     def setUp(self):
         self.test_dir = tempfile.mkdtemp(dir=MEDIA_ROOT)
+        self.test_dir2 = tempfile.mkdtemp(dir=MEDIA_ROOT)
         self.album = create_album(self.test_dir)
+        self.album2 = create_album(self.test_dir2)
+        self.client = Client()
 
     def tearDown(self):
         shutil.rmtree(self.test_dir)
+        shutil.rmtree(self.test_dir2)
 
     def test_low_res_image_generated(self):
         create_photo(self.album)
@@ -117,3 +121,20 @@ class PhotoTestCase (TestCase):
         self.assertTrue("bilde_1.JPG" in test_dir_contents)
         lowres_dir_contents = os.listdir(os.path.join(self.test_dir, "lowres"))
         self.assertTrue("bilde_1_lowres.JPG" in lowres_dir_contents)
+
+    def test_album_id(self):
+        photo1 = create_photo(self.album)
+        photo2 = create_photo(self.album2)
+        photo3 = create_photo(self.album)
+        self.assertEqual(photo1.number_in_album, 1)
+        self.assertEqual(photo2.number_in_album, 1)
+        self.assertEqual(photo3.number_in_album, 2)
+        response = self.client.get(reverse("remote:photo", args=[self.album.name, photo1.number_in_album]))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(photo3.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(self.album.get_absolute_url())
+        self.assertContains(response, photo1.get_absolute_url())
+        self.assertContains(response, photo3.get_absolute_url())
+        self.assertNotContains(response, photo2.get_absolute_url())

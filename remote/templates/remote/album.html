@@ -8,7 +8,7 @@
 {% if photos %}
 <p>Tips: Hvis du trykker på et bilde får du det opp i superoppløsning. Kan være lurt hvis du har planer om å lagre det</p>
 {% for photo in photos %}
-<a href="{% url 'remote:photo' album.slug forloop.counter %}"><img class="general_image" src="{{ photo.image_lowres.url }}", alt="bilde"></a>
+<a href="{{ photo.get_absolute_url }}"><img class="general_image" src="{{ photo.image_lowres.url }}", alt="bilde"></a>
 {% endfor %}
 {% else %}
 <h2>Dette albumet har ikke noen bilder i seg ennå</h2>

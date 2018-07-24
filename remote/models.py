@@ -55,11 +55,14 @@ class Photo (models.Model):
     image = models.ImageField()
     image_lowres = models.ImageField()
     album = models.ForeignKey("Album", on_delete=models.CASCADE)
+    number_in_album = models.IntegerField(default=0)  # for lookups
 
     def save(self, *args, **kwargs):
         if not self.make_thumbnail():
             # set to a default thumbnail
             raise Exception('Could not create thumbnail - is the file type valid?')
+        if not self.pk:
+            self.number_in_album = Photo.objects.filter(album=self.album).count() + 1
         super(Photo, self).save(*args, **kwargs)
 
     def make_thumbnail(self):
@@ -83,6 +86,9 @@ class Photo (models.Model):
         self.image_lowres.save(thumb_filename, ContentFile(temp_thumb.read()), save=False)
         temp_thumb.close()
         return True
+
+    def get_absolute_url(self):
+        return reverse("remote:photo", args=[self.album.slug, self.number_in_album])
 
 
 class Album (models.Model):
