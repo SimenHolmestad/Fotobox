@@ -11,6 +11,27 @@ from io import BytesIO
 THUMBNAIL_SIZE = 1024, 1024
 
 
+class Settings (models.Model):
+    """
+    A model for storing settings, making it possible to change settings on
+    the django admin-site
+    """
+    show_full_size_image_on_capture = models.BooleanField(default=True)
+    do_countdown = models.BooleanField(default=False)
+
+    def get_or_create_settings():
+        if not Settings.objects.exists():
+            return Settings.objects.create()
+        return Settings.objects.all()[0]
+
+    # Make sure only one settings instance can exist
+    def save(self, *args, **kwargs):
+        if Settings.objects.exists() and not self.pk:
+            # self.pk == false -> the object is not yet stored in the database
+            raise ValidationError("There can only be one Settings instance")
+        return super(Settings, self).save(*args, **kwargs)
+
+
 class CameraStatus (models.Model):
     occupied = models.BooleanField(default=False)
 

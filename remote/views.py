@@ -2,13 +2,11 @@ from django.shortcuts import redirect, get_object_or_404
 from django.http import Http404
 
 from django.views.generic import TemplateView, ListView, CreateView
-from .models import CameraStatus, Album, Photo
+from .models import CameraStatus, Album, Photo, Settings
 import os
 import subprocess
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SHOW_FULL_SIZE_IMAGE_ON_CAPTURE = True
-DO_COUNTDOWN = True
 
 
 def get_album_or_404(album_name):
@@ -54,7 +52,7 @@ class Capture(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Capture, self).get_context_data(**kwargs)
         photo = Photo.objects.all().last()
-        if (SHOW_FULL_SIZE_IMAGE_ON_CAPTURE):
+        if (Settings.get_or_create_settings().show_full_size_image_on_capture):
             context["image_link"] = photo.image.url
         else:
             context["image_link"] = photo.image_lowres.url
@@ -69,8 +67,7 @@ class Capture(TemplateView):
             return redirect("remote:occupied")
         status.occupied = True
         status.save()
-        if (DO_COUNTDOWN):
-            print("didcountdown1")
+        if (Settings.get_or_create_settings().do_countdown):
             subprocess.call(["python3", "remote/image_capture.py", album.slug, "T"])
         else:
             subprocess.call(["python3", "remote/image_capture.py", album.slug])
