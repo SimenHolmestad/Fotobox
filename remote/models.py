@@ -58,6 +58,8 @@ class Photo (models.Model):
     number_in_album = models.IntegerField(default=0)  # for lookups
 
     def save(self, *args, **kwargs):
+        self.album.last_modified = timezone.now()
+        self.album.save()
         if not self.make_thumbnail():
             # set to a default thumbnail
             raise Exception('Could not create thumbnail - is the file type valid?')
@@ -93,9 +95,14 @@ class Photo (models.Model):
 
 class Album (models.Model):
     time_made = models.DateTimeField(default=timezone.now)
+    last_modified = models.DateTimeField(default=timezone.now)
+    priority = models.PositiveIntegerField(default=1)
     name = models.CharField(max_length=30)
     slug = models.SlugField(max_length=30, allow_unicode=False, unique=True)
     hidden = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-priority', '-last_modified']
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

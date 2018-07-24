@@ -74,6 +74,19 @@ class AlbumTestCase (TestCase):
         shutil.rmtree(self.test_dir)
         shutil.rmtree(self.test_dir2)
 
+    def test_ordering(self):
+        album1 = create_album(self.test_dir)
+        album2 = create_album(self.test_dir2)
+        create_photo(album1)
+        create_photo(album2)  # should make album2 priotitized as it is now the last modified
+        album_query = Album.objects.all()
+        self.assertEquals(list(album_query), [album2, album1])
+
+        album1.priority = 10
+        album1.save()
+        album_query2 = Album.objects.all()
+        self.assertEquals(list(album_query2), [album1, album2])
+
     def test_album_in_index(self):
         album = create_album(self.test_dir)
         response = self.client.get(reverse("remote:index"))
