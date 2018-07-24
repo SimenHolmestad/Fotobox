@@ -8,6 +8,7 @@ import subprocess
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHOW_FULL_SIZE_IMAGE_ON_CAPTURE = True
+DO_COUNTDOWN = True
 
 
 def get_album_or_404(album_name):
@@ -68,7 +69,11 @@ class Capture(TemplateView):
             return redirect("remote:occupied")
         status.occupied = True
         status.save()
-        subprocess.call(["python3", "remote/image_capture.py", album.slug])
+        if (DO_COUNTDOWN):
+            print("didcountdown1")
+            subprocess.call(["python3", "remote/image_capture.py", album.slug, "T"])
+        else:
+            subprocess.call(["python3", "remote/image_capture.py", album.slug])
         status.occupied = False
         status.save()
         photo = Photo()

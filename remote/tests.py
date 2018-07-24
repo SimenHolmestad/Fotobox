@@ -113,7 +113,6 @@ class PhotoTestCase (TestCase):
     def test_low_res_image_generated(self):
         create_photo(self.album)
         test_dir_contents = os.listdir(self.test_dir)
-        print(test_dir_contents)
         self.assertTrue("lowres" in test_dir_contents)
         self.assertTrue("bilde_1.JPG" in test_dir_contents)
         lowres_dir_contents = os.listdir(os.path.join(self.test_dir, "lowres"))

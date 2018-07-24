@@ -26,6 +26,7 @@ def kill_gphoto2_process():
 
 
 def clear_screen():
+    """ Kills all processes showing images on screen """
     p = subprocess.Popen(["ps"], stdout=subprocess.PIPE)
     out, err = p.communicate()
     # kill any open screen process
@@ -48,6 +49,10 @@ clear_command = ["--folder", "/store_00020001/DCIM/100CANON", "-R", "--delete-al
 trigger_command = ["--trigger-capture"]
 download_command = ["--get-all-files"]
 
+DO_COUNTDOWN = False
+if len(sys.argv) > 2:
+    DO_COUNTDOWN = True
+
 # The folder name is the argument given, or else the date is used as the folder name
 if len(sys.argv) > 1:
     folder_name = sys.argv[1]
@@ -55,7 +60,7 @@ else:
     shot_date = datetime.now().strftime("%Y-%m-%d")
     folder_name = shot_date
 
-base_dir = os.path.dirname(os.path.dirname(__file__))
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 save_location = os.path.join(base_dir, "media", folder_name)
 
 
@@ -63,7 +68,7 @@ def create_save_folder():
     try:
         os.makedirs(save_location)
     except:
-        print("Directory already in place")
+        print(save_location + " already in place")
     print("Images will be saved in " + save_location)
     os.chdir(save_location)
     if ".image_number.txt" not in os.listdir("."):
@@ -104,10 +109,22 @@ def rename_files(ID):
                 print("Renamed the raw-file to " + name)
 
 
+def countdown(time):
+    """ Shows a countdown on screen from 3 to 0 with given time interval in seconds """
+    show_image(base_dir + "/remote/countdown-images/countdown_3.png")
+    sleep(time)
+    show_image(base_dir + "/remote/countdown-images/countdown_2.png")
+    sleep(time)
+    show_image(base_dir + "/remote/countdown-images/countdown_1.png")
+    sleep(time)
+    show_image(base_dir + "/remote/countdown-images/countdown_0.png")
+
+
 kill_gphoto2_process()
 create_save_folder()
+if DO_COUNTDOWN:
+    countdown(0.7)
 capture_image()
 id = "bilde_" + str(get_next_image_number())
 rename_files(id)
-clear_screen()
 show_image(id + ".JPG")
