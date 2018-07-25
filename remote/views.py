@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.http import Http404
+from django.urls import reverse
 
 from django.views.generic import TemplateView, ListView, CreateView
 from .models import CameraStatus, Album, Photo, Settings
@@ -64,7 +65,7 @@ class Capture(TemplateView):
 
         status = get_or_create_camera_status()
         if (status.occupied):
-            return redirect("remote:occupied")
+            return redirect(reverse("remote:occupied", args=[album.slug]))
         status.occupied = True
         status.save()
         if (Settings.get_or_create_settings().do_countdown):
@@ -115,5 +116,4 @@ class Occupied(TemplateView):
         album = get_album_or_404(self.kwargs["album"])
         context = super(Occupied, self).get_context_data(**kwargs)
         context["album"] = album
-        context = super(PhotoView, self).get_context_data(**kwargs)
         return context

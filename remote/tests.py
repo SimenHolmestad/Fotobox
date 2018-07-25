@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.core.files.base import ContentFile
 from django.conf import settings
 from django.db.utils import IntegrityError
-from remote.models import Album, Photo
+from remote.models import Album, Photo, CameraStatus
 from PIL import Image
 import os
 import tempfile
@@ -48,20 +48,31 @@ class CaptureTestCase (TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
-    def testCapture(self):
+    def test_capture(self):
         if not RUN_CAPTURE_TESTS:
             print("RUN_CAPTURE_TESTS is set to False")
-            print("Did not run testCapture")
+            print("Did not run test_capture")
             return
         self.assertEqual(len(Photo.objects.all()), 0)
         album = create_album(self.test_dir)
-        response = self.client.get(reverse("remote:capture", args=[album.name]))
+        response = self.client.get(reverse("remote:capture", args=[album.slug]))
         self.assertEqual(len(Photo.objects.all()), 1)
         self.assertEqual(Photo.objects.all()[0].album, album)
         self.assertContains(response, Photo.objects.all()[0].image.url)
         test_dir_contents = os.listdir(self.test_dir)
         self.assertTrue("bilde_1.JPG" in test_dir_contents)
         self.assertTrue(".image_number.txt" in test_dir_contents)
+
+    def test_capture_when_occupied(self):
+        camera_status = CameraStatus.objects.create()
+        camera_status.occupied = True
+        camera_status.save()
+        album = create_album(self.test_dir)
+        response = self.client.get(reverse("remote:capture", args=[album.slug]))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get(reverse("remote:capture", args=[album.slug]), follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, reverse("remote:capture", args=[album.slug]))
 
 
 class AlbumTestCase (TestCase):

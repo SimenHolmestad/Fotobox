@@ -9,5 +9,5 @@ urlpatterns = [
     path('<album>/ta_bilde', views.Capture.as_view(), name="capture"),
     path('<album>', views.AlbumView.as_view(), name="album"),
     path('<album>/<int:number>', views.PhotoView.as_view(), name="photo"),
-    path('opptatt', views.Occupied.as_view(), name="occupied"),
+    path('<album>/opptatt', views.Occupied.as_view(), name="occupied"),
 ]
