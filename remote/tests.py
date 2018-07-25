@@ -37,7 +37,7 @@ def create_photo(album):
     return photo
 
 
-RUN_CAPTURE_TESTS = False
+CAMERA_CONNECTED = False  # The page should be tested both when the camera is connected and not.
 
 
 class CaptureTestCase (TestCase):
@@ -49,8 +49,9 @@ class CaptureTestCase (TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_capture(self):
-        if not RUN_CAPTURE_TESTS:
-            print("RUN_CAPTURE_TESTS is set to False")
+        """ This test will actually take a picture with the camera. This takes some time """
+        if not CAMERA_CONNECTED:
+            print("CAMERA_CONNECTED is set to False")
             print("Did not run test_capture")
             return
         self.assertEqual(len(Photo.objects.all()), 0)
@@ -67,6 +68,18 @@ class CaptureTestCase (TestCase):
         camera_status = CameraStatus.objects.create()
         camera_status.occupied = True
         camera_status.save()
+        album = create_album(self.test_dir)
+        response = self.client.get(reverse("remote:capture", args=[album.slug]))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get(reverse("remote:capture", args=[album.slug]), follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, reverse("remote:capture", args=[album.slug]))
+
+    def test_capture_when_no_camera(self):
+        if CAMERA_CONNECTED:
+            print("CAMERA_CONNECTED is set to True")
+            print("Did not run test_capture_when_no_camera")
+            return
         album = create_album(self.test_dir)
         response = self.client.get(reverse("remote:capture", args=[album.slug]))
         self.assertEqual(response.status_code, 302)

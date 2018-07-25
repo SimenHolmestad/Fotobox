@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.http import Http404
 from django.urls import reverse
-
 from django.views.generic import TemplateView, ListView, CreateView
 from .models import CameraStatus, Album, Photo, Settings
 import os
@@ -31,16 +30,6 @@ class NewAlbum(CreateView):
     fields = ["name"]
 
 
-def get_last_image_link(folder_name):
-    save_location = os.path.join(BASE_DIR, "media", folder_name)
-    os.chdir(save_location)
-    f = open(".image_number.txt", "r")
-    image_count = int(f.readlines()[0])
-    f.close()
-    os.chdir(BASE_DIR)
-    return folder_name + "/bilde_" + str(image_count) + ".JPG"
-
-
 def get_or_create_camera_status():
     if not CameraStatus.objects.exists():
         return CameraStatus.objects.create()
@@ -68,15 +57,21 @@ class Capture(TemplateView):
             return redirect(reverse("remote:occupied", args=[album.slug]))
         status.occupied = True
         status.save()
+        last_image_link = album.get_last_image_link()
         if (Settings.get_or_create_settings().do_countdown):
             subprocess.call(["python3", "remote/image_capture.py", album.slug, "T"])
         else:
             subprocess.call(["python3", "remote/image_capture.py", album.slug])
         status.occupied = False
         status.save()
+        next_image_link = album.get_last_image_link()
+        print ("NEXT_IMAGE_LINK: " + next_image_link)
+        print ("LAST_IMAGE_LINK: " + last_image_link)
+        if next_image_link == last_image_link:  # this means no image was added
+            return redirect(reverse("remote:not_connected", args=[album.slug]))
         photo = Photo()
         photo.album = album
-        photo.image.name = get_last_image_link(album.slug)
+        photo.image.name = next_image_link
         photo.save()
         return super(Capture, self).get(request, *args, **kwargs)
 
@@ -115,5 +110,15 @@ class Occupied(TemplateView):
     def get_context_data(self, **kwargs):
         album = get_album_or_404(self.kwargs["album"])
         context = super(Occupied, self).get_context_data(**kwargs)
+        context["album"] = album
+        return context
+
+
+class NotConnected(TemplateView):
+    template_name = "remote/not_connected.html"
+
+    def get_context_data(self, **kwargs):
+        album = get_album_or_404(self.kwargs["album"])
+        context = super(NotConnected, self).get_context_data(**kwargs)
         context["album"] = album
         return context

@@ -10,4 +10,5 @@ urlpatterns = [
     path('<album>', views.AlbumView.as_view(), name="album"),
     path('<album>/<int:number>', views.PhotoView.as_view(), name="photo"),
     path('<album>/opptatt', views.Occupied.as_view(), name="occupied"),
+    path('<album>/ikke_tilkoplet', views.NotConnected.as_view(), name="not_connected"),
 ]

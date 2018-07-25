@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
+from django.conf import settings
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils import timezone
@@ -113,3 +114,16 @@ class Album (models.Model):
 
     def get_absolute_url(self):
         return reverse("remote:album", args=[self.slug])
+
+    def get_last_image_link(self):
+        """ gets the path to the last image created in this albums folder """
+        save_location = os.path.join(settings.BASE_DIR, "media", self.slug)
+        try:
+            f = open(os.path.join(save_location, ".image_number.txt"), "r")
+        except IOError:
+            return "No_image"
+        image_count = int(f.readlines()[0])
+        if image_count == 0:
+            return "No_image"
+        f.close()
+        return self.slug + "/bilde_" + str(image_count) + ".JPG"

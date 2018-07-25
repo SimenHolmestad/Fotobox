@@ -1,0 +1,7 @@
+{% load static %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
+{% endblock stylesheets %}
+<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
+<h2><id="camera-error-message">Noe gikk galt. Mulig kameraet ikke er koplet til?</h2>
+<a href="{% url 'remote:capture' album.slug %}"><div class="button">Prøv på nytt</div></a>
