@@ -1,3 +1,8 @@
+body {
+    margin:0;
+    padding:0;
+}
+
 div.button {
     background-color:green;
     text-decoration: none;
@@ -21,4 +26,54 @@ a {
 
 #camera-error-message {
     font-size:100px;
+}
+
+#back-to-album-box {
+    background-color:yellow;
+}
+
+#back-to-album-box h2 {
+    font-family: "helvetica", sans-serif;
+    font-size:60px;
+    padding-top:20px;
+    height:90px;
+    text-align:center;
+    margin:0;
+}
+
+#return-arrow {
+    width:100px;
+    float:left;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+#photo-navigation-container {
+    width:100%;
+    background-color:yellow;
+}
+
+#left-arrow {
+    float:left;
+    width:100px;
+}
+
+#right-arrow {
+    float:right;
+    width:100px;
+}
+
+#image-counter {
+    width:300px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#image-counter h2 {
+    margin:0;
+    padding-top:20px;
+    height:80px;
+    font-family: "helvetica", sans-serif;
+    font-size:50px;
+    text-align:center;
 }

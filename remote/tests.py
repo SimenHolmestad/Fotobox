@@ -166,7 +166,7 @@ class PhotoTestCase (TestCase):
         self.assertEqual(photo1.number_in_album, 1)
         self.assertEqual(photo2.number_in_album, 1)
         self.assertEqual(photo3.number_in_album, 2)
-        response = self.client.get(reverse("remote:photo", args=[self.album.name, photo1.number_in_album]))
+        response = self.client.get(reverse("remote:photo", args=[self.album.slug, photo1.number_in_album]))
         self.assertEqual(response.status_code, 200)
         response = self.client.get(photo3.get_absolute_url())
         self.assertEqual(response.status_code, 200)
@@ -175,3 +175,22 @@ class PhotoTestCase (TestCase):
         self.assertContains(response, photo1.get_absolute_url())
         self.assertContains(response, photo3.get_absolute_url())
         self.assertNotContains(response, photo2.get_absolute_url())
+
+    def test_navigation_links(self):
+        photo1 = create_photo(self.album)
+        response = self.client.get(reverse("remote:photo", args=[self.album.slug, photo1.number_in_album]))
+        self.assertNotContains(response, "Arrow_right.svg")
+        self.assertNotContains(response, "Arrow_left.svg")
+
+        photo2 = create_photo(self.album)
+        response = self.client.get(reverse("remote:photo", args=[self.album.slug, photo1.number_in_album]))
+        self.assertNotContains(response, "Arrow_right.svg")
+        self.assertContains(response, "Arrow_left.svg")
+        response = self.client.get(reverse("remote:photo", args=[self.album.slug, photo2.number_in_album]))
+        self.assertContains(response, "Arrow_right.svg")
+        self.assertNotContains(response, "Arrow_left.svg")
+
+        photo3 = create_photo(self.album)
+        response = self.client.get(reverse("remote:photo", args=[self.album.slug, photo2.number_in_album]))
+        self.assertContains(response, "Arrow_right.svg")
+        self.assertContains(response, "Arrow_left.svg")

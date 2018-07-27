@@ -1,8 +1,30 @@
 {% load static %}
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
 {% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> remote </a></h1>
-<h1><a href="{% url 'remote:album' album %}">Tilbake til album</a></h1>
-<img class="general_image" src="{{ photo.image.url }}", alt="bilde">
-<p>Hvis du er på telefon, kan du holde fingeren på bildet og lagre det med menyen som kommer opp. (På iphone i hvert fall. Jeg regner med at dere som bruker android klarer dere selv ;))</p>
+<body>
+    <h1><a href="{% url 'remote:index' %}"> remote </a></h1>
+    <a href="{% url 'remote:album' album %}">
+	<div id="back-to-album-box">
+	    <img id="return-arrow" src="{% static 'remote/Arrow_left_180.svg' %}">
+	    <h2>Tilbake til album</h2>
+	</div>
+    </a>
+    <img class="general_image" src="{{ photo.image.url }}", alt="bilde">
+    <div id="photo-navigation-container">
+	{% if previous_image_link %}
+	    <a href= "{{ previous_image_link }}">
+		<img id="left-arrow" src="{% static 'remote/Arrow_left.svg' %}">
+	    </a>
+	{% endif %}
+	{% if next_image_link %}
+	    <a href="{{ next_image_link }}">
+		<img id="right-arrow" src="{% static 'remote/Arrow_right.svg' %}">
+	    </a>
+	{% endif %}
+	<div id="image-counter">
+	    <h2>bilde {{ current_photo }} av {{ photos_in_album }}</h2>
+	</div>
+    </div>
+    <p>Hvis du er på telefon, kan du holde fingeren på bildet og lagre det med menyen som kommer opp. (På iphone i hvert fall. Jeg regner med at dere som bruker android klarer dere selv ;))</p>
+</body>

@@ -65,8 +65,6 @@ class Capture(TemplateView):
         status.occupied = False
         status.save()
         next_image_link = album.get_last_image_link()
-        print ("NEXT_IMAGE_LINK: " + next_image_link)
-        print ("LAST_IMAGE_LINK: " + last_image_link)
         if next_image_link == last_image_link:  # this means no image was added
             return redirect(reverse("remote:not_connected", args=[album.slug]))
         photo = Photo()
@@ -101,6 +99,14 @@ class PhotoView(TemplateView):
         context = super(PhotoView, self).get_context_data(**kwargs)
         context["photo"] = photo
         context["album"] = self.kwargs["album"]
+        photos_in_album = Photo.objects.filter(album=album).count()
+        number_in_album = self.kwargs["number"]
+        context["photos_in_album"] = photos_in_album
+        context["current_photo"] = photos_in_album - number_in_album + 1
+        if number_in_album < photos_in_album:
+            context["previous_image_link"] = reverse("remote:photo", args=[album.slug, number_in_album + 1])
+        if number_in_album > 1:
+            context["next_image_link"] = reverse("remote:photo", args=[album.slug, number_in_album - 1])
         return context
 
 
