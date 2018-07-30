@@ -46,7 +46,7 @@ class Capture(TemplateView):
             context["image_link"] = photo.image.url
         else:
             context["image_link"] = photo.image_lowres.url
-        context["album"] = self.kwargs["album"]
+        context["album"] = get_album_or_404(self.kwargs["album"])
         return context
 
     def get(self, request, *args, **kwargs):
@@ -98,7 +98,7 @@ class PhotoView(TemplateView):
         photo = get_object_or_404(Photo, album=album, number_in_album=self.kwargs["number"])
         context = super(PhotoView, self).get_context_data(**kwargs)
         context["photo"] = photo
-        context["album"] = self.kwargs["album"]
+        context["album"] = album
         photos_in_album = Photo.objects.filter(album=album).count()
         number_in_album = self.kwargs["number"]
         context["photos_in_album"] = photos_in_album

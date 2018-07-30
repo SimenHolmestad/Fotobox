@@ -1,30 +1,34 @@
-{% load static %}
-{% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
-{% endblock stylesheets %}
-<body>
-    <h1><a href="{% url 'remote:index' %}"> remote </a></h1>
-    <a href="{% url 'remote:album' album %}">
-	<div id="back-to-album-box">
-	    <img id="return-arrow" src="{% static 'remote/Arrow_left_180.svg' %}">
-	    <h2>Tilbake til album</h2>
+{% extends "remote/base.html" %}
+{% block content %}
+    <div class="album py-5 bg-light">
+	<div class="container">
+	    <div class="col-md-12">
+		<div class="card mb-12 shadow-sm">
+		    <img class="card-img-top" src="{{ photo.image.url }}", alt="bilde">
+		    <div class="card-body">
+			<!-- <p class="card-text">Her går det senere an å legge inn en beskrivelse av bildet??</p> -->
+			<div class="d-flex justify-content-between align-items-center">
+			    {% if previous_image_link %}
+				<a href="{{ previous_image_link }}">
+				    <button type="button" class="btn btn-sm btn-outline-secondary">Forrige bilde</button>
+				</a>
+			    {% endif %}
+			    <small class="text-muted text-center">Bilde {{ current_photo }} av {{ photos_in_album }}<br>(Høy oppløsning)</small>
+			    {% if next_image_link %}
+				<a href="{{ next_image_link }}">
+				    <button type="button" class="btn btn-sm btn-outline-secondary">Neste bilde</button>
+				</a>
+			    {% endif %}
+			</div>
+		    </div>
+		</div>
+	    </div>
 	</div>
-    </a>
-    <img class="general_image" src="{{ photo.image.url }}", alt="bilde">
-    <div id="photo-navigation-container">
-	{% if previous_image_link %}
-	    <a href= "{{ previous_image_link }}">
-		<img id="left-arrow" src="{% static 'remote/Arrow_left.svg' %}">
-	    </a>
-	{% endif %}
-	{% if next_image_link %}
-	    <a href="{{ next_image_link }}">
-		<img id="right-arrow" src="{% static 'remote/Arrow_right.svg' %}">
-	    </a>
-	{% endif %}
-	<div id="image-counter">
-	    <h2>bilde {{ current_photo }} av {{ photos_in_album }}</h2>
+	<div class="text-center" id="back-to-album">
+	    <a href="{% url 'remote:album' album.slug %}" class="btn-primary btn-lg">Tilbake til album</a>
 	</div>
     </div>
-    <p>Hvis du er på telefon, kan du holde fingeren på bildet og lagre det med menyen som kommer opp. (På iphone i hvert fall. Jeg regner med at dere som bruker android klarer dere selv ;))</p>
-</body>
+{% endblock content %}
+{% block tips %}
+    <p>Tips: Hvis du er på telefon, kan du holde fingeren på bildet og lagre det med menyen som kommer opp. (På iphone i hvert fall)</p>
+{% endblock tips %}

@@ -1,9 +1,25 @@
-{% load static %}
-{% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
-{% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
-<img class="general_image" src="{{ image_link }}", alt="bilde">
-<p>Tips: Hvis du er på telefon, kan du holde fingeren på bildet og lagre det med menyen som kommer opp.</p>
-<a href="{% url 'remote:capture' album %}"><div class="button">Ta nytt bilde</div></a>
-<h1><a href="{% url 'remote:album' album %}">Gå til album</a></h1>
+{% extends "remote/base.html" %}
+{% block content %}
+    <main role="main">
+	<section class="jumbotron text-center bg-light">
+	    <h1 class="jumbotron-heading">Bildet ble tatt!</h1>
+	    <p class="lead text-muted">Alt funket (faktisk) som det skulle. Bildet er nedenfor i full oppløsning og klar til å lagres.</p>
+	    <p>
+		<a href="{% url 'remote:capture' album.slug %}" class="btn btn-primary my-2">Ta nytt bilde</a>
+		<a href="{% url 'remote:album' album.slug %}" class="btn btn-secondary my-2">Tilbake til album</a>
+	    </p>
+	</section>
+    </main>
+    <div class="album py-5 bg-light">
+	<div class="container">
+	    <div class="col-md-12">
+		<div class="card mb-12 shadow-sm">
+		    <img class="card-img-top" src="{{ image_link }}", alt="bilde">
+		</div>
+	    </div>
+	</div>
+    </div>
+{% endblock content %}
+{% block tips %}
+    <p>Tips: Hvis du er på telefon, kan du holde fingeren på bildet og lagre det med menyen som kommer opp. (På iphone i hvert fall)</p>
+{% endblock tips %}

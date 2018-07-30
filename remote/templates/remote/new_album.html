@@ -1,11 +1,17 @@
-{% load static %}
+{% extends "remote/base.html" %}
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
+    {% load static %}
+    <link href="{% static 'remote/error.css' %}" rel="stylesheet">
 {% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
-<h1 style="font-size:140px">Lag nytt album:</h1>
-<p>Du kan kalle albumet ditt for hva som helst, eller navnet ditt hvis du ikke kommer på noe.</p>
-<form method="post">{% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="lag album" />
-</form>
+{% block content %}
+    <main role="main">
+	<section class="jumbotron text-center bg-light">
+	    <h1 class="jumbotron-heading">Lag nytt album</h1>
+	    <p class="lead text-muted">Du kan kalle albumet ditt for hva som helst, for eksempel <i>vodka shots</i> eller <i>xXxVerDeNsBesteAlBumxXx</i></p>
+	    <form method="post">{% csrf_token %}
+		{{ form }}
+		<input type="submit" value="lag album" />
+	    </form>
+	</section>
+    </main>
+{% endblock content %}

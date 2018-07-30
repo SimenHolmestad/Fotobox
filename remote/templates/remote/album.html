@@ -1,15 +1,50 @@
-{% load static %}
-{% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
-{% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
-<h1>Bilder i albumet "{{ album.name }}":</h1>
-<a href="{% url 'remote:capture' album.slug %}"><div class="button">Ta nytt bilde til albumet</div></a>
-{% if photos %}
-<p>Tips: Hvis du trykker på et bilde får du det opp i superoppløsning. Kan være lurt hvis du har planer om å lagre det</p>
-{% for photo in photos %}
-<a href="{{ photo.get_absolute_url }}"><img class="general_image" src="{{ photo.image_lowres.url }}", alt="bilde"></a>
-{% endfor %}
-{% else %}
-<h2>Dette albumet har ikke noen bilder i seg ennå</h2>
-{% endif %}
+{% extends "remote/base.html" %}
+{% block content %}
+    <main role="main">
+	<section class="jumbotron text-center">
+	    <div class="container">
+		<h1 class="jumbotron-heading">{{ album.name }}</h1>
+		<p class="lead text-muted">Dette albumet har ikke noen beskrivelse ennå</p>
+		<p>
+		    <a href="{% url 'remote:capture' album.slug %}" class="btn btn-primary my-2">Ta nytt bilde til album</a>
+		    <a href="{% url 'remote:index' %}" class="btn btn-secondary my-2">Tilbake til albumliste</a>
+		</p>
+	    </div>
+	</section>
+
+	<div class="album py-5 bg-light">
+	    <div class="container">
+		{% if photos %}
+		    <div class="row">
+			{% for photo in photos %}
+			    <div class="col-md-4">
+				<div class="card mb-4 shadow-sm">
+				    <a href="{{ photo.get_absolute_url }}">
+					<img class="card-img-top" src="{{ photo.image_lowres.url }}" alt="Card image cap">
+				    </a>
+				    <div class="card-body">
+					<!-- <p class="card-text">Her går det senere an å legge inn en beskrivelse av bildet??</p> -->
+					<div class="d-flex justify-content-between align-items-center">
+					    <a href="{{ photo.get_absolute_url }}">
+						<button type="button" class="btn btn-sm btn-outline-secondary">Full størrelse</button>
+					    </a>
+					    <small class="text-muted">x tid siden</small>
+					</div>
+				    </div>
+				</div>
+			    </div>
+
+			{% endfor %}
+		    </div>
+		{% else %}
+		    <div class="text-center">
+			<p class="jumbotron-heading">Det er ingen bilder i albumet ennå :(</p>
+		    </div>
+		{% endif %}
+	    </div>
+	</div>
+    </main>
+{% endblock content %}
+{% block tips %}
+    <p>Tips: Du kan også trykke på et bilde for å få det opp i full oppløsning, ideelt for lagring.</p>
+{% endblock tips %}

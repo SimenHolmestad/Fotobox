@@ -14,3 +14,7 @@ To be able to display an image on the monitor, you will need to have seh install
 export DISPLAY=:0
 ```
 This will set your monitor as the output display so seh can do its thing.
+
+## design
+
+The page design is heavily inspired (read stolen) from https://getbootstrap.com/docs/4.1/examples/album/

@@ -1,11 +1,32 @@
-{% load static %}
-{% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
-{% endblock stylesheets %}
+{% extends "remote/base.html" %}
+{% block content %}
+    <section class="jumbotron text-center">
+	<div class="container">
+	    <h1 class="jumbotron-heading">Hei og velkommen til Fotobox</h1>
+	    <p class="lead text-muted">Du kan bruke denne siden til å ta bilder med fotoboksen eller se på bilder som allerede er tatt. Velg et album under eller lag et nytt et for å begynne! </p>
+	</div>
+    </section>
+    <div class="album py-5 bg-light">
+	<div class="container">
+	    <div class="row">
+		{% for album in albums %}
+		    <div class="col-md-4">
+			<a href="{% url 'remote:album' album.slug %}">
+			    <div class="card mb-4 shadow-sm text-center">
+				<h2 class="album-title">{{ album.name }}</h2>
+			    </div>
+			</a>
+		    </div>
+		{% endfor %}
+		<div class="col-md-4">
+		    <a href="{% url 'remote:new_album' %}">
+			<div class="card mb-4 shadow-sm text-center">
+			    <h2 class="album-title">Lag nytt album</h2>
+			</div>
+		    </a>
+		</div>
 
-<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
-<p>Hei og velkommen til Fotobox. Du kan bruke denne siden til å ta bilder med fotoboksen eller se på bilder som allerede er tatt. Velg eller lag et album for å begynne!</p>
-<a href="{% url 'remote:new_album' %}"><div class="button">Lag nytt album</div></a>
-{% for album in albums %}
-  <a href="{% url 'remote:album' album.slug %}"><div class="button" style="background-color:yellow">{{ album.name }}</div></a>
-{% endfor %}
+	    </div>
+	</div>
+    </div>
+{% endblock content %}

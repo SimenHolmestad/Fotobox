@@ -98,7 +98,7 @@ class Album (models.Model):
     time_made = models.DateTimeField(default=timezone.now)
     last_modified = models.DateTimeField(default=timezone.now)
     priority = models.PositiveIntegerField(default=1)
-    name = models.CharField(max_length=30)
+    name = models.CharField("Navn", max_length=30)
     slug = models.SlugField(max_length=30, allow_unicode=False, unique=True)
     hidden = models.BooleanField(default=False)
 

@@ -1,7 +1,17 @@
-{% load static %}
+{% extends "remote/base.html" %}
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'remote/styles.css' %}" />
+    {% load static %}
+    <link href="{% static 'remote/error.css' %}" rel="stylesheet">
 {% endblock stylesheets %}
-<h1><a href="{% url 'remote:index' %}"> Fotobox </a></h1>
-<h2><id="camera-error-message">Kameraet er opptatt. Prøv på nytt når ingen bruker det</h2>
-<a href="{% url 'remote:capture' album.slug %}"><div class="button">Ta nytt bilde</div></a>
+{% block content %}
+    <main role="main">
+	<section class="jumbotron text-center bg-light">
+	    <h1 class="jumbotron-heading">Opptatt</h1>
+	    <p class="lead text-muted">Kameraet er opptatt. Det er noen som bruker det akkurat nå.</p>
+	    <p>
+		<a href="{% url 'remote:capture' album.slug %}" class="btn btn-primary my-2">Prøv på nytt</a>
+		<a href="{% url 'remote:album' album.slug %}" class="btn btn-secondary my-2">Tilbake til album</a>
+	    </p>
+	</section>
+    </main>
+{% endblock content %}

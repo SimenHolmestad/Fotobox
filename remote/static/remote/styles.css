@@ -1,79 +1,49 @@
-body {
-    margin:0;
-    padding:0;
+:root {
+  --jumbotron-padding-y: 3rem;
 }
 
-div.button {
-    background-color:green;
-    text-decoration: none;
-    color: initial;
-    width:100%;
-    height:200px;
-    font-size:50px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 200px;
+.jumbotron {
+  padding-top: var(--jumbotron-padding-y);
+  padding-bottom: var(--jumbotron-padding-y);
+  margin-bottom: 0;
+  background-color: #fff;
+}
+@media (min-width: 768px) {
+  .jumbotron {
+    padding-top: calc(var(--jumbotron-padding-y) * 2);
+    padding-bottom: calc(var(--jumbotron-padding-y) * 2);
+  }
 }
 
-a {
-    text-decoration:none;
+.jumbotron p:last-child {
+  margin-bottom: 0;
 }
 
-.general_image {
-    max-height:100%;
-    max-width:100%;
+.jumbotron-heading {
+  font-weight: 300;
 }
 
-#camera-error-message {
-    font-size:100px;
+.Jumbotron .container {
+  max-width: 40rem;
 }
 
-#back-to-album-box {
-    background-color:yellow;
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
-#back-to-album-box h2 {
-    font-family: "helvetica", sans-serif;
-    font-size:60px;
-    padding-top:20px;
-    height:90px;
-    text-align:center;
-    margin:0;
+footer p {
+  margin-bottom: .25rem;
 }
 
-#return-arrow {
-    width:100px;
-    float:left;
-    padding-top:5px;
-    padding-bottom:5px;
+#back-to-album {
+    padding-top:48px;
 }
 
-#photo-navigation-container {
-    width:100%;
-    background-color:yellow;
+a:hover {
+  text-decoration: none;
 }
-
-#left-arrow {
-    float:left;
-    width:100px;
-}
-
-#right-arrow {
-    float:right;
-    width:100px;
-}
-
-#image-counter {
-    width:300px;
-    margin-left:auto;
-    margin-right:auto;
-}
-
-#image-counter h2 {
-    margin:0;
-    padding-top:20px;
-    height:80px;
-    font-family: "helvetica", sans-serif;
-    font-size:50px;
-    text-align:center;
+.album-title {
+    padding-top:1rem;
+    padding-bottom:1rem;
 }
