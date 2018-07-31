@@ -68,6 +68,8 @@ TEMPLATES = [
     },
 ]
 
+TEMPLATES[0]['OPTIONS']['context_processors'].append("remote.context_processors.contact_information_processor")
+
 WSGI_APPLICATION = 'cameraRemote.wsgi.application'
 
 

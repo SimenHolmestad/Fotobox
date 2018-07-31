@@ -19,6 +19,8 @@ class Settings (models.Model):
     """
     show_full_size_image_on_capture = models.BooleanField(default=True)
     do_countdown = models.BooleanField(default=False)
+    contact_first_name = models.CharField(max_length=12, default="noen")
+    contact_phone_number = models.CharField(max_length=15, default="")
 
     def get_or_create_settings():
         if not Settings.objects.exists():
