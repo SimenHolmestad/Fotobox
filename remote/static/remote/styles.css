@@ -48,3 +48,18 @@ a:hover {
     padding-top:1rem;
     padding-bottom:1rem;
 }
+
+.image-container {
+    padding-left:0px;
+    padding-right:0px;
+}
+
+.time-shot-text {
+    padding-top:10px;
+    padding-bottom:0px;
+}
+
+.image-card {
+    padding-bottom:10px;
+    padding-top:15px;
+}

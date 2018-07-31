@@ -3,11 +3,13 @@ from django.urls import reverse
 from django.core.files.base import ContentFile
 from django.conf import settings
 from django.db.utils import IntegrityError
+from django.utils import timezone
 from remote.models import Album, Photo, CameraStatus
 from PIL import Image
 import os
 import tempfile
 import shutil
+import datetime
 from io import BytesIO
 
 MEDIA_ROOT = settings.BASE_DIR + "/media"
@@ -158,6 +160,29 @@ class PhotoTestCase (TestCase):
         self.assertTrue("bilde_1.JPG" in test_dir_contents)
         lowres_dir_contents = os.listdir(os.path.join(self.test_dir, "lowres"))
         self.assertTrue("bilde_1_lowres.JPG" in lowres_dir_contents)
+
+    def test_time_elapsed_since_taken(self):
+        photo = create_photo(self.album)
+        photo.shot_time = timezone.now() - datetime.timedelta(days=370)
+        self.assertEqual(photo.time_elapsed_since_taken(), "Mer enn 1 år siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(days=40)
+        self.assertEqual(photo.time_elapsed_since_taken(), "Mer enn 1 måned siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(days=70)
+        self.assertEqual(photo.time_elapsed_since_taken(), "Mer enn 2 måneder siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(days=1, seconds=50)
+        self.assertEqual(photo.time_elapsed_since_taken(), "1 dag siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(days=2, seconds=50)
+        self.assertEqual(photo.time_elapsed_since_taken(), "2 dager siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(seconds=7261)
+        self.assertEqual(photo.time_elapsed_since_taken(), "2 timer og 1 minutt siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(seconds=3725)
+        self.assertEqual(photo.time_elapsed_since_taken(), "1 time og 2 minutter siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(seconds=125)
+        self.assertEqual(photo.time_elapsed_since_taken(), "2 minutter siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(seconds=3601)
+        self.assertEqual(photo.time_elapsed_since_taken(), "1 time siden")
+        photo.shot_time = timezone.now() - datetime.timedelta(seconds=26)
+        self.assertEqual(photo.time_elapsed_since_taken(), "26 sekunder siden")
 
     def test_album_id(self):
         photo1 = create_photo(self.album)

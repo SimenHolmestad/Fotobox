@@ -68,6 +68,52 @@ class Photo (models.Model):
             self.number_in_album = Photo.objects.filter(album=self.album).count() + 1
         super(Photo, self).save(*args, **kwargs)
 
+    def time_elapsed_since_taken(self):
+        """ returns a string containing the time elapsed since the photo was taken """
+        now = timezone.now()
+        delta = now - self.shot_time
+        if delta.days // 365 > 0:
+            return "Mer enn " + str(delta.days // 365) + " år siden"
+
+        if delta.days // 30 > 0:
+            if delta.days // 30 == 1:
+                return "Mer enn 1 måned siden"
+            else:
+                return "Mer enn " + str(delta.days // 30) + " måneder siden"
+
+        if delta.days > 0:
+            if delta.days == 1:
+                return "1 dag siden"
+            else:
+                return str(delta.days) + " dager siden"
+
+        hours = delta.seconds // 3600
+        if hours == 1:
+            hour_string = "1 time"
+        else:
+            hour_string = str(hours) + " timer"
+
+        minutes = (delta.seconds % 3600) // 60
+        if minutes == 1:
+            minute_string = "1 minutt"
+        else:
+            minute_string = str(minutes) + " minutter"
+
+        seconds = (delta.seconds % 3600) - minutes * 60
+        if seconds == 1:
+            second_string = "1 sekund"
+        else:
+            second_string = str(seconds) + " sekunder"
+
+        if hours > 0:
+            if minutes == 0:
+                return hour_string + " siden"
+            return hour_string + " og " + minute_string + " siden"
+        if minutes > 0:
+            return minute_string + " siden"
+        else:
+            return second_string + " siden"
+
     def make_thumbnail(self):
         image = Image.open(self.image.path)
         image.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)

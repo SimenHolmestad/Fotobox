@@ -28,7 +28,7 @@
 					    <a href="{{ photo.get_absolute_url }}">
 						<button type="button" class="btn btn-sm btn-outline-secondary">Full størrelse</button>
 					    </a>
-					    <small class="text-muted">x tid siden</small>
+					    <small class="text-muted">{{ photo.time_elapsed_since_taken }}</small>
 					</div>
 				    </div>
 				</div>

@@ -1,11 +1,11 @@
 {% extends "remote/base.html" %}
 {% block content %}
     <div class="album py-5 bg-light">
-	<div class="container">
+	<div class="container image-container">
 	    <div class="col-md-12">
 		<div class="card mb-12 shadow-sm">
 		    <img class="card-img-top" src="{{ photo.image.url }}", alt="bilde">
-		    <div class="card-body">
+		    <div class="card-body image-card">
 			<!-- <p class="card-text">Her går det senere an å legge inn en beskrivelse av bildet??</p> -->
 			<div class="d-flex justify-content-between align-items-center">
 			    {% if previous_image_link %}
@@ -19,6 +19,9 @@
 				    <button type="button" class="btn btn-sm btn-outline-secondary">Neste bilde</button>
 				</a>
 			    {% endif %}
+			</div>
+			<div class="text-center" style="padding-bottom:0">
+			    <small class="time-shot-text">{{ photo.shot_time|date:'l d. F o, H:i' }}</small>
 			</div>
 		    </div>
 		</div>
