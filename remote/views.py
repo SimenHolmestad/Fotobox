@@ -9,8 +9,11 @@ import subprocess
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def get_album_or_404(album_name):
-    album = get_object_or_404(Album, slug=album_name)
+def get_album_or_404(album_slug):
+    project_settings = Settings.get_or_create_settings()
+    if project_settings.main_album is not None and project_settings.main_album.slug != album_slug:
+        raise Http404
+    album = get_object_or_404(Album, slug=album_slug)
     if album.hidden:
         raise Http404
     return album
@@ -19,6 +22,13 @@ def get_album_or_404(album_name):
 class Index(ListView):
     template_name = "remote/index.html"
     context_object_name = "albums"
+
+    def get(self, request, *args, **kwargs):
+        """ redirects to main album if main album is set """
+        project_settings = Settings.get_or_create_settings()
+        if project_settings.main_album is not None:
+            return redirect(reverse("remote:album", args=[project_settings.main_album.slug]))
+        return super(Index, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         return Album.objects.filter(hidden=False)
@@ -81,7 +91,11 @@ class AlbumView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AlbumView, self).get_context_data(**kwargs)
-        context["album"] = Album.objects.get(slug=self.kwargs["album"])
+        context["album"] = get_album_or_404(self.kwargs["album"])
+        project_settings = Settings.get_or_create_settings()
+        context["show_index_link"] = True
+        if project_settings.main_album is not None:
+            context["show_index_link"] = False
         return context
 
     def get_queryset(self):

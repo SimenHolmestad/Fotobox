@@ -4,7 +4,7 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 from django.db.utils import IntegrityError
 from django.utils import timezone
-from remote.models import Album, Photo, CameraStatus
+from remote.models import Album, Photo, CameraStatus, Settings
 from PIL import Image
 import os
 import tempfile
@@ -127,9 +127,9 @@ class AlbumTestCase (TestCase):
         response = self.client.get(reverse("remote:index"))
         self.assertContains(response, album2.name)
         self.assertNotContains(response, album1.name)
-        response = self.client.get(reverse("remote:album", args=[album1.name]))
+        response = self.client.get(reverse("remote:album", args=[album1.slug]))
         self.assertEqual(response.status_code, 404)
-        response = self.client.get(reverse("remote:album", args=[album2.name]))
+        response = self.client.get(reverse("remote:album", args=[album2.slug]))
         self.assertEqual(response.status_code, 200)
 
     def test_same_slug(self):
@@ -139,6 +139,22 @@ class AlbumTestCase (TestCase):
             self.fail()
         except IntegrityError:
             pass
+
+    def test_album_when_main_album(self):
+        album1 = create_album(self.test_dir)
+        album2 = create_album(self.test_dir2)
+        project_settings = Settings.get_or_create_settings()
+        project_settings.main_album = album1
+        project_settings.save()
+        response = self.client.get(reverse("remote:album", args=[album1.slug]))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse("remote:album", args=[album2.slug]))
+        self.assertEqual(response.status_code, 404)
+        response = self.client.get(reverse("remote:index"))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get(reverse("remote:index"), follow=True)
+        self.assertContains(response, album1.name)
+        self.assertNotContains(response, "Tilbake til albumliste")
 
 
 class PhotoTestCase (TestCase):
