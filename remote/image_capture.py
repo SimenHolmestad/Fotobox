@@ -1,6 +1,7 @@
 from time import sleep
 from datetime import datetime
 from sh import gphoto2 as gp
+import sh
 import sys
 import signal
 import os
@@ -88,7 +89,11 @@ def get_next_image_number():
 
 
 def capture_image():
-    gp(clear_command)  # deletes the images in the folder
+    try:
+        gp(clear_command)  # deletes the images in the folder
+    except sh.ErrorReturnCode_1:
+        print("Ooooops... Camera not connected")
+        exit()
     gp(trigger_command)
     sleep(2)  # so that the camera's got time to load the image to the sd-card
     gp(download_command)
