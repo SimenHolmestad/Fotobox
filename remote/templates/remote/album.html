@@ -4,7 +4,7 @@
 	<section class="jumbotron text-center">
 	    <div class="container">
 		<h1 class="jumbotron-heading">{{ album.name }}</h1>
-		<p class="lead text-muted">Dette albumet har ikke noen beskrivelse ennå</p>
+		<p class="lead text-muted">{{ album.description }}</p>
 		<p>
 		    <a href="{% url 'remote:capture' album.slug %}" class="btn btn-primary my-2">Ta nytt bilde til album</a>
 		    <a href="{% url 'remote:index' %}" class="btn btn-secondary my-2">Tilbake til albumliste</a>

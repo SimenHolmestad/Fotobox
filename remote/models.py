@@ -145,6 +145,7 @@ class Album (models.Model):
     last_modified = models.DateTimeField(default=timezone.now)
     priority = models.PositiveIntegerField(default=1)
     name = models.CharField("Navn", max_length=30)
+    description = models.TextField("Beskrivelse", default="")
     slug = models.SlugField(max_length=30, allow_unicode=False, unique=True)
     hidden = models.BooleanField(default=False)
 
@@ -153,6 +154,8 @@ class Album (models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
+        if self.description == "":
+            self.description = "Dette albumet har ingen beskrivelse"
         super(Album, self).save(*args, **kwargs)
 
     def to_string(self):

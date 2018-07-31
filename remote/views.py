@@ -27,7 +27,7 @@ class Index(ListView):
 class NewAlbum(CreateView):
     template_name = "remote/new_album.html"
     model = Album
-    fields = ["name"]
+    fields = ["name", "description"]
 
 
 def get_or_create_camera_status():

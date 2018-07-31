@@ -9,7 +9,7 @@
 	    <h1 class="jumbotron-heading">Lag nytt album</h1>
 	    <p class="lead text-muted">Du kan kalle albumet ditt for hva som helst, for eksempel <i>vodka shots</i> eller <i>xXxVerDeNsBesteAlBumxXx</i></p>
 	    <form method="post">{% csrf_token %}
-		{{ form }}
+		{{ form.as_p }}
 		<input type="submit" value="lag album" />
 	    </form>
 	</section>
