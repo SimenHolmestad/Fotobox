@@ -14,8 +14,13 @@
 	    </div>
 	</section>
 
-	<div class="album py-5 bg-light">
+	<div class="album py-4 bg-light">
 	    <div class="container">
+		{% if is_paginated %}
+		    <div class="album-pagination-top">
+			{% include "remote/album_pagination.html" %}
+		    </div>
+		{% endif %}
 		{% if photos %}
 		    <div class="row">
 			{% for photo in photos %}
@@ -41,6 +46,11 @@
 		{% else %}
 		    <div class="text-center">
 			<p class="jumbotron-heading">Det er ingen bilder i albumet ennå :(</p>
+		    </div>
+		{% endif %}
+		{% if is_paginated %}
+		    <div class="album-pagination-bottom">
+			{% include "remote/album_pagination.html" %}
 		    </div>
 		{% endif %}
 	    </div>

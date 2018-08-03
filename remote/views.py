@@ -7,7 +7,7 @@ import os
 import subprocess
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+ALBUM_PAGINATION = 18
 
 def get_album_or_404(album_slug):
     project_settings = Settings.get_or_create_settings()
@@ -88,6 +88,7 @@ class AlbumView(ListView):
     template_name = "remote/album.html"
     context_object_name = "photos"
     model = Album
+    paginate_by = ALBUM_PAGINATION
 
     def get_context_data(self, **kwargs):
         context = super(AlbumView, self).get_context_data(**kwargs)
@@ -121,6 +122,11 @@ class PhotoView(TemplateView):
             context["previous_image_link"] = reverse("remote:photo", args=[album.slug, number_in_album + 1])
         if number_in_album > 1:
             context["next_image_link"] = reverse("remote:photo", args=[album.slug, number_in_album - 1])
+        back_to_album_link = reverse("remote:album", args=[album.slug])
+        page_in_album = ((photos_in_album - number_in_album) // ALBUM_PAGINATION) + 1
+        if page_in_album > 1:
+            back_to_album_link += ("?page=" + str(page_in_album))
+        context["back_to_album_link"] = back_to_album_link
         return context
 
 

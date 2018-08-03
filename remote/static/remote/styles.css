@@ -63,3 +63,19 @@ a:hover {
     padding-bottom:10px;
     padding-top:15px;
 }
+
+
+.pagination {
+    justify-content: center;
+    margin-bottom:0px;
+}
+
+.album-pagination-top {
+    margin-bottom:1.5rem;
+}
+
+.album-pagination-bottom {
+    padding-top:0rem;
+    padding-bottom:0;
+    padding-bottom:0;
+}

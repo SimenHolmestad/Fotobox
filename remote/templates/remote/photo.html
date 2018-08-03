@@ -28,7 +28,7 @@
 	    </div>
 	</div>
 	<div class="text-center" id="back-to-album">
-	    <a href="{% url 'remote:album' album.slug %}" class="btn-primary btn-lg">Tilbake til album</a>
+	    <a href="{{ back_to_album_link }}" class="btn-primary btn-lg">Tilbake til album</a>
 	</div>
     </div>
 {% endblock content %}
