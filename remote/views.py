@@ -3,6 +3,7 @@ from django.http import Http404
 from django.urls import reverse
 from django.views.generic import TemplateView, ListView, CreateView
 from .models import CameraStatus, Album, Photo, Settings
+from .forms import AlbumAddForm
 import os
 import subprocess
 
@@ -37,7 +38,7 @@ class Index(ListView):
 class NewAlbum(CreateView):
     template_name = "remote/new_album.html"
     model = Album
-    fields = ["name", "description"]
+    form_class = AlbumAddForm
 
 
 def get_or_create_camera_status():

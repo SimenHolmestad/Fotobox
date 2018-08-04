@@ -5,13 +5,21 @@
 {% endblock stylesheets %}
 {% block content %}
     <main role="main">
-	<section class="jumbotron text-center bg-light">
+	<section class="jumbotron text-center py-5">
 	    <h1 class="jumbotron-heading">Lag nytt album</h1>
-	    <p class="lead text-muted">Du kan kalle albumet ditt for hva som helst, for eksempel <i>vodka shots</i> eller <i>xXxVerDeNsBesteAlBumxXx</i></p>
-	    <form method="post">{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="lag album" />
-	    </form>
+	    <p class="lead text-muted">Du kan kalle albumet ditt for hva som helst, for eksempel <i>vodka shots</i> eller <i>MittAlbumErKulereEnnDitt</i></p>
 	</section>
+	<div class ="album py-4 bg-light text-center">
+	    <div class="container">
+		<form method="post">{% csrf_token %}
+		    {{ form.errors }}
+		    {{ form.name }}
+		    <br>
+		    {{ form.description }}
+		    <br>
+		    <input type="submit" class="btn btn-primary" value="Lag album" />
+		</form>
+	    </div>
+	</div>
     </main>
 {% endblock content %}
